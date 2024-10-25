@@ -20,9 +20,9 @@ def signal_handler(sig, frame):
 # Function to print statistics
 def print_stats(stats: dict, file_size: int) -> None:
     print("File size: {:d}".format(file_size))
-    for k, v in sorted(stats.items()):
-        if v:
-            print("{}: {}".format(k, v))
+    for k in sorted(stats.keys()):
+        if stats[k] > 0:
+            print("{}: {}".format(k, stats[k]))
 
 # Attach the signal handler to SIGINT
 signal.signal(signal.SIGINT, signal_handler)
@@ -39,14 +39,14 @@ try:
     for line in sys.stdin:
         count += 1
         match = log_pattern.match(line)
-        
+
         if match:
             status_code = match.group('status')
             file_size = int(match.group('size'))
-            
+
             if status_code in stats:
                 stats[status_code] += 1
-            
+
             filesize += file_size
 
         # Print statistics every 10 lines
