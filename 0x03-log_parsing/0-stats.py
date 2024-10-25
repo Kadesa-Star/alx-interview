@@ -7,6 +7,7 @@ import sys
 import signal
 import re
 
+
 # Initialize variables
 filesize, count = 0, 0
 codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
