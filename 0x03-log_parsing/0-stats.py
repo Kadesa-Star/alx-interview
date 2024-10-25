@@ -5,13 +5,16 @@ import re
 
 # Initialize variables
 total_file_size = 0
-status_codes_count = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+status_codes_count = {
+        200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 line_count = 0
+
 
 # Define a signal handler for SIGINT
 def signal_handler(sig, frame):
     print_statistics()
     sys.exit(0)
+
 
 # Function to print statistics
 def print_statistics():
@@ -20,12 +23,16 @@ def print_statistics():
         if status_codes_count[status_code] > 0:
             print(f"{status_code}: {status_codes_count[status_code]}")
 
+
 # Attach the signal handler to SIGINT
 signal.signal(signal.SIGINT, signal_handler)
 
+
 # Regex pattern to match the log line format
 log_pattern = re.compile(
-    r'^(?P<ip>[\d\.]+) - \[(?P<date>[^\]]+)\] "GET /projects/260 HTTP/1.1" (?P<status>\d{3}) (?P<size>\d+)$'
+    r'^(?P<ip>[\d\.]+) - \['
+    r'(?P<date>[^\]]+)\] "GET /projects/260 HTTP/1.1" '
+    r'(?P<status>\d{3}) (?P<size>\d+)$'
 )
 
 # Read from stdin line by line
