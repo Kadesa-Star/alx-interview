@@ -12,10 +12,12 @@ filesize, count = 0, 0
 codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
 stats = {k: 0 for k in codes}
 
+
 # Define a signal handler for keyboard interruption
 def signal_handler(sig, frame):
     print_stats(stats, filesize)
     sys.exit(0)
+
 
 # Function to print statistics
 def print_stats(stats: dict, file_size: int) -> None:
@@ -24,8 +26,10 @@ def print_stats(stats: dict, file_size: int) -> None:
         if stats[k] > 0:
             print("{}: {}".format(k, stats[k]))
 
+
 # Attach the signal handler to SIGINT
 signal.signal(signal.SIGINT, signal_handler)
+
 
 # Regular expression for log entry parsing
 log_pattern = re.compile(
@@ -33,6 +37,7 @@ log_pattern = re.compile(
     r'(?P<date>[^\]]+)\] "GET /projects/260 HTTP/1.1" '
     r'(?P<status>\d{3}) (?P<size>\d+)$'
 )
+
 
 # Read from stdin line by line
 try:
@@ -54,6 +59,7 @@ try:
             print_stats(stats, filesize)
 
     print_stats(stats, filesize)
+
 
 except KeyboardInterrupt:
     print_stats(stats, filesize)
