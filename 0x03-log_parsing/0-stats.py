@@ -1,59 +1,60 @@
 #!/usr/bin/python3
+"""
+Log parsing
+"""
+
 import sys
 import signal
 import re
 
+# Initialize variables
+filesize, count = 0, 0
+codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
+stats = {k: 0 for k in codes}
 
-""" Initialize variables"""
-total_file_size = 0
-status_codes_count = {
-        200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
-
-
-""" Define a signal handler for SIGINT """
+# Define a signal handler for keyboard interruption
 def signal_handler(sig, frame):
-    print_statistics()
+    print_stats(stats, filesize)
     sys.exit(0)
 
+# Function to print statistics
+def print_stats(stats: dict, file_size: int) -> None:
+    print("File size: {:d}".format(file_size))
+    for k, v in sorted(stats.items()):
+        if v:
+            print("{}: {}".format(k, v))
 
-""" Function to print statistics """
-def print_statistics():
-    print(f"File size: {total_file_size}")
-    for status_code in sorted(status_codes_count.keys()):
-        if status_codes_count[status_code] > 0:
-            print(f"{status_code}: {status_codes_count[status_code]}")
-
-
-""" Attach the signal handler to SIGINT """
+# Attach the signal handler to SIGINT
 signal.signal(signal.SIGINT, signal_handler)
 
-
-""" Regex pattern to match the log line format """
+# Regular expression for log entry parsing
 log_pattern = re.compile(
     r'^(?P<ip>[\d\.]+) - \['
     r'(?P<date>[^\]]+)\] "GET /projects/260 HTTP/1.1" '
     r'(?P<status>\d{3}) (?P<size>\d+)$'
 )
 
-""" Read from stdin line by line """
-for line in sys.stdin:
-    line_count += 1
-    match = log_pattern.match(line)
+# Read from stdin line by line
+try:
+    for line in sys.stdin:
+        count += 1
+        match = log_pattern.match(line)
+        
+        if match:
+            status_code = match.group('status')
+            file_size = int(match.group('size'))
+            
+            if status_code in stats:
+                stats[status_code] += 1
+            
+            filesize += file_size
 
-    if match:
-        """ Extract the file size and status code """
-        file_size = int(match.group('size'))
-        status_code = int(match.group('status'))
+        # Print statistics every 10 lines
+        if count % 10 == 0:
+            print_stats(stats, filesize)
 
-        """ Update totals """
-        total_file_size += file_size
-        if status_code in status_codes_count:
-            status_codes_count[status_code] += 1
+    print_stats(stats, filesize)
 
-    """ Print statistics every 10 lines """
-    if line_count % 10 == 0:
-        print_statistics()
-
-""" Final print in case the program exits without a keyboard interrupt """
-print_statistics()
+except KeyboardInterrupt:
+    print_stats(stats, filesize)
+    raise
