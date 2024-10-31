@@ -3,13 +3,14 @@
 0-validate_utf8.py
 """
 
+
 def validUTF8(data):
     """
     Determines if a given data set represents a valid UTF-8 encoding.
-    
+
     Args:
     data (List[int]): A list of integers where each integer represents a byte.
-    
+
     Returns:
     bool: True if data is a valid UTF-8 encoding, else False.
     """
