@@ -7,7 +7,7 @@
  *                         with parsed JSON response
  *                         and rejects with the request error.
  */
-function makeRequest(url) {
+function makeRequest (url) {
   const request = require('request');
   return new Promise((resolve, reject) => {
     request.get(url, (error, response, body) => {
@@ -23,7 +23,7 @@ function makeRequest(url) {
  * Retrieves movie character info then prints their names
  * in order of appearance in the initial response.
  */
-async function main() {
+async function main () {
   const args = process.argv;
 
   // Ensure a movie ID is passed as a command-line argument
