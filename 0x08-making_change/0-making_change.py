@@ -23,7 +23,8 @@ def makeChange(coins, total):
     for coin in coins:
         if total == 0:
             break
-        change += total // coin  # Use as many coins of this denomination as possible
+        """ Use as many coins of this denomination as possible """
+        change += total // coin
         total %= coin  # Update the remaining total
 
     return change if total == 0 else -1
