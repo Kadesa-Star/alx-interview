@@ -13,14 +13,13 @@ def makeChange(coins, total):
     if total <= 0:
         return 0
 
-    # Initialize a DP array to represent minimum coins needed for each amount
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0  # Base case: 0 coins needed for total 0
+    coins.sort(reverse=True)  # Sort coins in descending order
+    total_coins = 0
 
-    # Fill the DP table
-    for coin in coins:
-        for amount in range(coin, total + 1):
-            dp[amount] = min(dp[amount], dp[amount - coin] + 1)
+    for denom in coins:
+        if total <= 0:
+            break
+        total_coins += total // denom
+        total %= denom
 
-    # If dp[total] is still infinity, it means the amount can't be achieved
-    return dp[total] if dp[total] != float('inf') else -1
+    return total_coins if total == 0 else -1
