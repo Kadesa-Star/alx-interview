@@ -1,25 +1,29 @@
 #!/usr/bin/python3
+
+""" Contains makeChange function"""
+
+
 def makeChange(coins, total):
     """
-    Determine the fewest number of coins needed to meet a given amount total.
+    Determine the fewest number of coins needed to meet a given total.
 
     Args:
         coins (list): List of coin denominations.
-        total (int): The total amount to achieve.
+        total (int): The target total.
 
     Returns:
-        int: Fewest number of coins needed, or -1 if total cannot be achieved.
+        int: Minimum number of coins needed, or -1 if total cannot be achieved.
     """
     if total <= 0:
         return 0
 
     coins.sort(reverse=True)  # Sort coins in descending order
-    total_coins = 0
+    change = 0
 
-    for denom in coins:
-        if total <= 0:
+    for coin in coins:
+        if total == 0:
             break
-        total_coins += total // denom
-        total %= denom
+        change += total // coin  # Use as many coins of this denomination as possible
+        total %= coin  # Update the remaining total
 
-    return total_coins if total == 0 else -1
+    return change if total == 0 else -1
